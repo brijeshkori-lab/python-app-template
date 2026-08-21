@@ -1,6 +1,6 @@
 @Library('python-library') _
 
-ipeline {
+pipeline {
     agent any
 
     stages {
