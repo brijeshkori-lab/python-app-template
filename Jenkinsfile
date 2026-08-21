@@ -1,12 +1,12 @@
 @Library('python-library') _
 
-pipeline {
+ipeline {
     agent any
 
     stages {
-        stage('Run Shared Library') {
+        stage('Python CI/CD') {
             steps {
-                pythonPipeline()
+                pythonPipeline('python-local')
             }
         }
     }
