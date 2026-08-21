@@ -18,8 +18,9 @@ pipeline {
                 sh '''
                     python3 -m venv venv
                     . venv/bin/activate
+
                     pip install -r requirements.txt
-                    pip install build
+                    pip install build twine
                 '''
             }
         }
@@ -42,41 +43,23 @@ pipeline {
             }
         }
 
-       stage('Publish to JFrog') {
-    steps {
-        withCredentials([
-            string(credentialsId: 'jfrog-user', variable: 'JFROG_USER'),
-            string(credentialsId: 'jfrog-token', variable: 'JFROG_TOKEN')
-        ]) {
-            sh '''
-                . venv/bin/activate
-
-                pip install twine
-
-                python -m twine upload \
-                  --repository-url ${JFROG_URL}/artifactory/api/pypi/python-local \
-                  -u "$JFROG_USER" \
-                  -p "$JFROG_TOKEN" \
-                  dist/*
-            '''
-        }
-    }
-} stage('Publish to JFrog') {
+        stage('Publish to JFrog') {
             steps {
                 withCredentials([
-                    usernamePassword(
-                        credentialsId: 'jfrog-python',
-                        usernameVariable: 'JFROG_USER',
-                        passwordVariable: 'JFROG_TOKEN'
+                    string(
+                        credentialsId: 'jfrog-user',
+                        variable: 'JFROG_USER'
+                    ),
+                    string(
+                        credentialsId: 'jfrog-token',
+                        variable: 'JFROG_TOKEN'
                     )
                 ]) {
                     sh '''
                         . venv/bin/activate
 
-                        pip install twine
-
                         python -m twine upload \
-                          --repository-url ${JFROG_URL}/artifactory/api/pypi/python-local \
+                          --repository-url "${JFROG_URL}/artifactory/api/pypi/python-local" \
                           -u "$JFROG_USER" \
                           -p "$JFROG_TOKEN" \
                           dist/*
