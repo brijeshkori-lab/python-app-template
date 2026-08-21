@@ -13,6 +13,7 @@ pipeline {
 
     environment {
         JFROG_URL = 'https://trialn4vk2g.jfrog.io'
+        JFROG_REPO = "${params.JFROG_REPO}"
     }
 
     stages {
@@ -53,29 +54,23 @@ pipeline {
             }
         }
 
-        stage('Publish to JFrog') {
-            steps {
-                withCredentials([
-                    string(
-                        credentialsId: 'jfrog-user',
-                        variable: 'JFROG_USER'
-                    ),
-                    string(
-                        credentialsId: 'jfrog-token',
-                        variable: 'JFROG_TOKEN'
-                    )
-                ]) {
-                    sh '''
-                        . venv/bin/activate
+       stage('Publish to JFrog') {
+    steps {
+        withCredentials([
+            string(credentialsId: 'jfrog-user', variable: 'JFROG_USER'),
+            string(credentialsId: 'jfrog-token', variable: 'JFROG_TOKEN')
+        ]) {
+            sh '''
+                . venv/bin/activate
 
-                        python -m twine upload \
-                          --repository-url "${JFROG_URL}/artifactory/api/pypi/${params.JFROG_REPO}" \
-                          -u "$JFROG_USER" \
-                          -p "$JFROG_TOKEN" \
-                          dist/*
-                    '''
-                }
-            }
+                python -m twine upload \
+                  --repository-url "${JFROG_URL}/artifactory/api/pypi/${JFROG_REPO}" \
+                  -u "$JFROG_USER" \
+                  -p "$JFROG_TOKEN" \
+                  dist/*
+            '''
         }
+    }
+}
     }
 }
