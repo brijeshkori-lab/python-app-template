@@ -6,7 +6,7 @@ pipeline {
     stages {
         stage('Python CI/CD') {
             steps {
-                pythonPipeline('python-local')
+                pythonPipeline()
             }
         }
     }
