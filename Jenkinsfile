@@ -1,5 +1,15 @@
 pipeline {
     agent any
+    
+    parameters {
+        choice(
+            name: 'JFROG_REPO',
+            choices: [
+                'python-local'
+            ],
+            description: 'JFrog repository for Python packages'
+        )
+    }
 
     environment {
         JFROG_URL = 'https://trialn4vk2g.jfrog.io'
@@ -59,7 +69,7 @@ pipeline {
                         . venv/bin/activate
 
                         python -m twine upload \
-                          --repository-url "${JFROG_URL}/artifactory/api/pypi/python-local" \
+                          --repository-url "${JFROG_URL}/artifactory/api/pypi/${params.JFROG_REPO}" \
                           -u "$JFROG_USER" \
                           -p "$JFROG_TOKEN" \
                           dist/*
