@@ -1,0 +1,11 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "python-app-template"
+version = "1.0.0"
+description = "Demo Python application"
+
+[tool.setuptools]
+py-modules = ["app"]
